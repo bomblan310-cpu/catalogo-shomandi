@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="color-scheme" content="light">
+  <title>SHOMANDI | Administración</title>
+  <link rel="stylesheet" href="/admin.css?v=7">
+</head>
+<body>
+  <header class="masthead">
+    <nav class="shell"><a class="brand" href="/">SHOMANDI <span>/ administración</span></a><div class="actions"><a href="/catalog.html" target="_blank" rel="noopener">Ver tienda ↗</a><button id="logout" class="secondary" hidden>Cerrar sesión</button></div></nav>
+    <div class="shell heading"><div><p class="eyebrow">Panel de control</p><h1>Tu catálogo<span>.</span></h1><p class="muted">Productos, precios y existencias en un solo lugar.</p></div><div id="stats" class="stats" hidden aria-label="Resumen del inventario"><div><span>Productos publicados</span><strong id="stat-products">0</strong><small>Modelos visibles en tu tienda</small></div><div><span>Unidades disponibles</span><strong id="stat-units">0</strong><small>Stock de los productos publicados</small></div><div><span>Productos con stock bajo</span><strong id="stat-low">0</strong><small>Publicados con 1 a 3 unidades</small></div></div></div>
+  </header>
+  <main class="shell content">
+    <div id="message" role="status" aria-live="polite" hidden></div>
+    <section id="login-card" class="card login-card"><p class="eyebrow">Acceso privado</p><h2>Ingresá a tu panel</h2><p class="muted">Ingresá con tu usuario y contraseña para gestionar el catálogo.</p><form id="login-form"><label>Usuario<input id="username" type="text" autocomplete="username" maxlength="120" required></label><label style="margin-top:16px">Contraseña<input id="password" type="password" autocomplete="current-password" maxlength="1024" required></label><button type="submit">Entrar al panel →</button></form></section>
+    <div id="admin-panel" hidden>
+      <section id="inventory-view">
+        <div class="toolbar"><div class="toolbar-actions"><button id="add-product">＋ Agregar producto</button><button id="open-taxonomy" class="secondary" type="button">Marcas y categorías</button></div><span id="result-count" class="muted" aria-live="polite"></span></div>
+        <div class="filters card"><label>Buscar producto<input id="product-search" type="search" placeholder="Nombre, marca o descripción…"></label><label>Mostrar<select id="status-filter"><option value="active">Publicados</option><option value="all">Todos los productos</option><option value="low">Stock bajo (1 a 3)</option><option value="empty">Sin stock</option><option value="featured">Destacados</option><option value="inactive">Ocultos</option></select></label><label>Ordenar<select id="sort-order"><option value="recent">Más recientes</option><option value="name">Nombre: A a Z</option><option value="stock">Menor stock</option><option value="price">Menor precio</option></select></label></div>
+        <div class="table-wrap card"><table><thead><tr><th>Producto</th><th>Precio base</th><th>Stock total</th><th>Variantes y movimientos</th><th class="align-right">Acciones</th></tr></thead><tbody id="products"></tbody></table><div id="empty-state" class="empty" hidden><h2>No hay productos para mostrar</h2><p class="muted">Probá otra búsqueda o agregá tu primer producto.</p></div></div>
+        <p class="inventory-note">Las consultas por WhatsApp no descuentan stock. Usá «−1 Vendido» para descontar una unidad al confirmar una venta y «+1 Reponer» para sumar una unidad. Stock bajo: entre 1 y 3 unidades por producto.</p>
+
+      </section>
+      <section id="editor" class="card editor" hidden>
+        <div class="editor-heading"><div><p class="eyebrow">Gestión del catálogo</p><h2 id="form-title">Nuevo producto</h2></div><button type="button" class="secondary" id="back-button">← Volver</button></div>
+        <form id="product-form">
+          <fieldset><legend>01 / Información del producto</legend><div class="two-columns"><label>Nombre *<input name="name" maxlength="160" placeholder="Ej. Samsung Galaxy S24" required></label><label>Precio base (Gs.) *<input name="price" type="number" min="0" max="999999999" step="1" placeholder="Ej. 2500000" required></label><label>Marca *<select name="brandId" id="brand-input" required></select></label><label>Categoría *<select name="categoryId" id="category-input" required></select></label></div><label>Descripción<textarea name="description" maxlength="4000" rows="4" placeholder="Características, estado del equipo y qué incluye…"></textarea></label><div class="two-columns"><label class="check"><input name="isFeatured" type="checkbox"><span>Destacar en portada<small>Da más visibilidad a este producto.</small></span></label><label class="check"><input name="isActive" type="checkbox" checked><span>Publicado en la tienda<small>Desmarcá para ocultarlo y conservar el inventario.</small></span></label></div></fieldset>
+          <fieldset><legend>02 / Variantes e inventario</legend><p class="muted">Agregá una variante por combinación de almacenamiento y color. El precio propio es opcional; vacío usa el precio base.</p><div id="variants"></div><div class="toolbar"><button type="button" id="add-variant" class="secondary">＋ Agregar variante</button><span class="stock-total">Inventario total: <strong id="form-stock">0</strong> unidades</span></div></fieldset>
+          <fieldset><legend>03 / Imágenes</legend><p class="muted">La imagen principal se muestra en el catálogo. Los cambios de esta sección se aplican al guardar.</p><div id="images" class="image-grid"></div><label>Subir imágenes desde tu dispositivo<input id="image-files" type="file" accept="image/*" multiple></label><small class="muted">Hasta 10 MB por imagen. Los archivos se suben después de guardar el producto.</small></fieldset>
+          <div class="form-footer"><button id="submit-button" type="submit">Crear producto</button><button id="cancel-edit" type="button" class="secondary">Cancelar</button><span class="muted">* Campos obligatorios</span></div>
+        </form>
+      </section>
+    </div>
+  </main>
+  <dialog id="taxonomy-dialog" class="card taxonomy-dialog" aria-labelledby="taxonomy-title">
+    <div class="editor-heading"><div><p class="eyebrow">Opciones del catálogo</p><h2 id="taxonomy-title">Marcas y categorías</h2></div><button id="close-taxonomy" class="secondary" type="button" aria-label="Cerrar marcas y categorías">Cerrar</button></div>
+    <p class="muted">Agregá las opciones que vas a usar al crear o editar productos.</p>
+    <p id="taxonomy-message" role="status" aria-live="polite" hidden></p>
+    <div class="two-columns"><form id="brand-form"><label>Nueva marca<input name="name" placeholder="Ej. Motorola" maxlength="120" required></label><button class="secondary">Agregar marca</button></form><form id="category-form"><label>Nueva categoría<input name="name" placeholder="Ej. Tablets" maxlength="120" required></label><button class="secondary">Agregar categoría</button></form></div>
+  </dialog>
+  <script src="/admin.js?v=9"></script>
+</body>
+</html>
+
+
+

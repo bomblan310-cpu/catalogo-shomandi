@@ -1,12 +1,11 @@
-bin/
-obj/
+**/bin/
+**/obj/
 .git/
 .vs/
 mobilecatalog.local.db
+*.db
 *.user
 *.suo
 appsettings.Development.json
-README.local.mdbin/
-obj/
-.git/
-appsettings.Development.json
+README.local.md
+

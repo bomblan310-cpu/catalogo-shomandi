@@ -2,7 +2,7 @@
 
 API y storefront web para publicar celulares, consultar el catálogo y recibir pedidos por WhatsApp. El proyecto no utiliza carrito de compras: cada producto puede enviarse directamente a WhatsApp con sus datos y variante seleccionada.
 
-Está construido con **ASP.NET Core 8**, **Entity Framework Core**, **SQLite/PostgreSQL** y **Cloudinary** para las imágenes.
+Está construido con **ASP.NET Core 8**, **Entity Framework Core**, **SQLite/PostgreSQL** y **Cloudinary**, organizado con Clean Architecture.
 
 ## Funcionalidades
 
@@ -14,6 +14,7 @@ Está construido con **ASP.NET Core 8**, **Entity Framework Core**, **SQLite/Pos
 - Ajuste de stock por variante.
 - SQLite local para desarrollo y PostgreSQL para producción.
 - Health checks en `/health` y `/ping`.
+- Documentación interactiva de la API con Swagger/OpenAPI.
 
 ## Páginas
 
@@ -36,8 +37,8 @@ La aplicación sirve sus páginas estáticas desde `wwwroot`:
 ```bash
 git clone <URL_DEL_REPOSITORIO>
 cd catalogo-shomandi
-dotnet restore
-dotnet run --launch-profile http
+dotnet restore MobileCatalog.sln
+dotnet run --project src/MobileCatalog.WebApi --launch-profile http
 ```
 
 Después, abre la URL que muestra la consola (normalmente `http://localhost:5xxx`). También puedes probar:
@@ -45,6 +46,7 @@ Después, abre la URL que muestra la consola (normalmente `http://localhost:5xxx
 ```text
 http://localhost:5xxx/catalog.html
 http://localhost:5xxx/health
+http://localhost:5xxx/swagger
 ```
 
 En desarrollo, si no existe una cadena de conexión válida, la aplicación usa automáticamente `mobilecatalog.local.db` (SQLite), crea las tablas y carga datos de ejemplo. Para comenzar desde cero, detén la aplicación y elimina ese archivo.
@@ -68,14 +70,16 @@ Las opciones se leen desde `appsettings.json`, User Secrets y variables de entor
 Para configurar credenciales locales sin escribirlas en archivos del proyecto:
 
 ```bash
-dotnet user-secrets set "Admin:Username" "admin"
-dotnet user-secrets set "Admin:PasswordHash" "<HASH_GENERADO>"
-dotnet user-secrets set "Admin:ApiKey" "<CLAVE_LOCAL>"
+dotnet user-secrets set "Admin:Username" "admin" --project src/MobileCatalog.WebApi
+dotnet user-secrets set "Admin:PasswordHash" "<HASH_GENERADO>" --project src/MobileCatalog.WebApi
+dotnet user-secrets set "Admin:ApiKey" "<CLAVE_LOCAL>" --project src/MobileCatalog.WebApi
 ```
 
 El panel usa una sesión con cookie HttpOnly, SameSite=Strict, duración de 30 minutos y límite de intentos de inicio de sesión. Los endpoints administrativos requieren sesión o, para integraciones compatibles, el header `X-Admin-Key`.
 
 ## API principal
+
+La especificación OpenAPI y la interfaz Swagger UI están disponibles en `/swagger`. Los endpoints administrativos admiten el header `X-Admin-Key` desde el botón **Authorize**.
 
 ### Catálogo público
 
@@ -133,20 +137,20 @@ Esto puede reducir los tiempos de arranque, pero Render Free y GitHub Actions no
 ## Estructura del proyecto
 
 ```text
-Controllers/   Endpoints de la API
-Data/          DbContext y datos iniciales
-Models/        Entidades y DTOs
-Services/      WhatsApp, Cloudinary, slugs y seguridad
-Database/      Script SQL del esquema
-wwwroot/       Storefront y panel web
-Program.cs     Configuración y arranque
+src/
+├── MobileCatalog.Domain/          Entidades y reglas centrales
+├── MobileCatalog.Application/     DTOs y servicios de aplicación
+├── MobileCatalog.Infrastructure/  Persistencia, PostgreSQL/SQLite y Cloudinary
+└── MobileCatalog.WebApi/          Controllers, seguridad, Swagger y arranque
+Database/                          Script SQL del esquema
+    └── wwwroot/                   Storefront y panel web
 ```
 
 ## Docker
 
 ```bash
 docker build -t shomandi-catalog .
-docker run --rm -p 8080:8080 shomandi-catalog
+docker run --rm -p 10000:10000 shomandi-catalog
 ```
 
 Para producción, inyecta las variables de entorno descritas arriba y no copies secretos dentro de la imagen.
