@@ -1,5 +1,7 @@
 **/bin/
 **/obj/
+.local-build/
+.keepalive-check/
 .git/
 .vs/
 mobilecatalog.local.db
@@ -8,4 +10,3 @@ mobilecatalog.local.db
 *.suo
 appsettings.Development.json
 README.local.md
-
