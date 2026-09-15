@@ -4,6 +4,17 @@ API y storefront web para publicar celulares, consultar el catálogo y recibir p
 
 Está construido con **ASP.NET Core 8**, **Entity Framework Core**, **SQLite/PostgreSQL** y **Cloudinary**, organizado con Clean Architecture.
 
+## Demo en producción
+
+| Recurso | URL |
+| --- | --- |
+| Tienda | [shomandi-catalog.onrender.com](https://shomandi-catalog.onrender.com) |
+| Catálogo | [shomandi-catalog.onrender.com/catalog.html](https://shomandi-catalog.onrender.com/catalog.html) |
+| Swagger UI | [shomandi-catalog.onrender.com/swagger](https://shomandi-catalog.onrender.com/swagger) |
+| Estado del servicio | [shomandi-catalog.onrender.com/health](https://shomandi-catalog.onrender.com/health) |
+
+La instancia utiliza el plan gratuito de Render, por lo que la primera solicitud después de un periodo sin actividad puede tardar mientras el servicio vuelve a iniciarse.
+
 ## Funcionalidades
 
 - Catálogo público con búsqueda, filtros por marca/categoría, rango de precios y destacados.
@@ -136,6 +147,8 @@ Esto puede reducir los tiempos de arranque, pero Render Free y GitHub Actions no
 
 ## Estructura del proyecto
 
+La solución separa el dominio, los servicios de aplicación, las integraciones externas y la capa HTTP. Las dependencias apuntan hacia las capas internas para mantener la lógica central aislada de ASP.NET Core, Entity Framework y Cloudinary.
+
 ```text
 src/
 ├── MobileCatalog.Domain/          Entidades y reglas centrales
@@ -152,6 +165,8 @@ Database/                          Script SQL del esquema
 docker build -t shomandi-catalog .
 docker run --rm -p 10000:10000 shomandi-catalog
 ```
+
+La imagen se construye mediante un proceso multi-stage: el SDK de .NET compila y publica la solución, mientras que la imagen final contiene únicamente el runtime y los archivos necesarios para ejecutar la API.
 
 Para producción, inyecta las variables de entorno descritas arriba y no copies secretos dentro de la imagen.
 
