@@ -1,0 +1,33 @@
+# Compilación de .NET
+bin/
+obj/
+.local-build/
+.keepalive-check/
+
+# Bases de datos locales
+*.db
+*.db-shm
+*.db-wal
+
+# Configuración local y secretos
+appsettings.Local.json
+secrets.json
+.env
+.env.*
+!.env.example
+
+# Herramientas e IDE
+.vs/
+.vscode/
+.idea/
+*.user
+*.suo
+
+# Sistema operativo
+.DS_Store
+Thumbs.db
+
+# Logs y temporales
+*.log
+*.tmp
+TestResults/

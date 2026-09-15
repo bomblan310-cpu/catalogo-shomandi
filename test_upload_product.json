@@ -1,0 +1,11 @@
+﻿{
+  "name": "Test Cloudinary Upload",
+  "description": "prueba de subida",
+  "price": 100,
+  "isFeatured": false,
+  "isActive": true,
+  "categoryId": "c6fb238c-cf7e-45ce-b1a7-f860574e78c5",
+  "brandId": "1e807a14-6d66-4d08-9519-b88f9729aae1",
+  "variants": [{ "storage": "128 GB", "color": "Negro", "stock": 1 }],
+  "images": []
+}

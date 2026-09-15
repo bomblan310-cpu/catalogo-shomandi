@@ -1,0 +1,23 @@
+name: Keep Render service warm
+
+on:
+  schedule:
+    - cron: "*/10 * * * *"
+  workflow_dispatch:
+
+jobs:
+  ping:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Ping Render service
+        env:
+          APP_URL: ${{ vars.APP_URL }}
+        run: |
+          if [ -z "$APP_URL" ]; then
+            echo "Repository variable APP_URL is not configured"
+            exit 1
+          fi
+          APP_URL="$(printf '%s' "$APP_URL" | tr -d '\r\n' | sed 's:/*$::')"
+          PING_URL="${APP_URL}/ping"
+          echo "Pinging ${PING_URL}"
+            PING_URL="$PING_URL" python -c "import os; from urllib.request import urlopen; url=os.environ['PING_URL'].strip(); response=urlopen(url, timeout=30); print(f'Ping returned HTTP {response.status}'); response.close()"

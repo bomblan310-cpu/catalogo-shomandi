@@ -1,0 +1,37 @@
+services:
+  - type: web
+    name: shomandi-catalog
+    runtime: docker
+    plan: free
+    healthCheckPath: /health
+    envVars:
+      - key: ASPNETCORE_ENVIRONMENT
+        value: Production
+      - key: ASPNETCORE_URLS
+        value: http://+:10000
+      - key: ConnectionStrings__CatalogDatabase
+        fromDatabase:
+          name: shomandi-db
+          property: connectionString
+      - key: Admin__ApiKey
+        sync: false
+      - key: Admin__Username
+        sync: false
+      - key: Admin__PasswordHash
+        sync: false
+      - key: WhatsApp__BaseUrl
+        value: https://wa.me
+      - key: WhatsApp__PhoneNumber
+        sync: false
+      - key: Cloudinary__CloudName
+        sync: false
+      - key: Cloudinary__ApiKey
+        sync: false
+      - key: Cloudinary__ApiSecret
+        sync: false
+
+databases:
+  - name: shomandi-db
+    plan: free
+    databaseName: mobile_catalog
+    user: mobile_catalog

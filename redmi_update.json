@@ -1,0 +1,21 @@
+﻿{
+    "variants":  [
+                     {
+                         "price":  null,
+                         "color":  "Midnight Black",
+                         "storage":  "256 GB",
+                         "stock":  5
+                     }
+                 ],
+    "slug":  "redmi-note-13-pro",
+    "description":  "Equipo seleccionado por VOLTA con garantía y atención directa.",
+    "price":  1899000,
+    "brandId":  "44a7c1e4-6061-46de-9f2b-66b97f259db5",
+    "images":  [
+
+               ],
+    "name":  "Redmi Note 13 Pro",
+    "categoryId":  "c6fb238c-cf7e-45ce-b1a7-f860574e78c5",
+    "isActive":  true,
+    "isFeatured":  true
+}
